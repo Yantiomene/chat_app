@@ -14,7 +14,7 @@ exports.registerUser = async (req, res) => {
         const { name, email, password } = req.body;
 
         let user = userModel.findOne({ email });
-        console.log(user.email);
+        console.log(user);
         if (user.email) {
             return res.status(400).json({
                 success: false,
@@ -71,3 +71,47 @@ exports.registerUser = async (req, res) => {
             });
     }
 };
+
+
+exports.loginUser = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        let user = await userModel.findOne({ email });
+
+        
+        if (!user) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid email or password..." 
+            });
+        }
+
+        const validPassword = await bcrypt.compare(password, user.password);
+
+        if (!validPassword) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid password..." 
+            });
+        }
+
+        const token = createToken(user._id);
+
+        res.status(200).json({
+            success: true,
+            message: "User logged in successfully...",
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            token
+        });
+        
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+}
