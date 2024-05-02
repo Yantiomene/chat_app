@@ -3,6 +3,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 //const { MongoClient, ServerApiVersion} = require("mongodb");
 const userRoute = require("./Routes/userRoute");
+const chatRoute = require("./Routes/chatRoute");
 
 const app = express();
 require("dotenv").config();
@@ -10,24 +11,24 @@ require("dotenv").config();
 app.use(express.json());
 app.use(cors());
 app.use("/api/users", userRoute);
+app.use("/api/chats", chatRoute);
 
 app.get("/api", (req, res) => {
-    res.send("Welcome to our chat app APIs...");
+  res.send("Welcome to our chat app APIs...");
 });
 
 const port = process.env.PORT || 5000;
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
-})
+});
 
 const uri = process.env.ATLAS_URI;
-
 
 mongoose
   .connect(uri)
   .then(() => console.log("MongoDB connected..."))
-  .catch(err => console.log("MongoDB connection failed: ", err));
+  .catch((err) => console.log("MongoDB connection failed: ", err));
 
 /*const client = new MongoClient(uri, {
     serverApi: {
