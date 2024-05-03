@@ -10,6 +10,7 @@ const Chat = () => {
     userChats,
     isUserChatsLoading,
     userChatsError,
+    updateCurrentChat,
     getMessages,
     sendMessage,
   } = useContext(ChatContext);
@@ -25,9 +26,9 @@ const Chat = () => {
             {isUserChatsLoading && <p>Loading chats...</p>}
             {userChatsError && <p>{userChatsError.message}</p>}
             {userChats?.map((chat, index) => (
-              <Stack key={index} gap={3}>
+              <div key={index} onClick={() => updateCurrentChat(chat)}>
                 <UserChat chat={chat} user={user} />
-              </Stack>
+              </div>
             ))}
           </Stack>
           <p>ChatBox</p>
