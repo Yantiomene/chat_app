@@ -5,7 +5,7 @@ import avatar from "../../assets/avatar.svg";
 
 const potentialChats = () => {
   const { user } = useContext(AuthContext);
-  const { potentialChats, createChat } = useContext(ChatContext);
+  const { potentialChats, createChat, onlineUsers } = useContext(ChatContext);
 
   return (
     <>
@@ -25,7 +25,13 @@ const potentialChats = () => {
                   height="20px"
                 />
                 {u.name}
-                <span className="user-online"></span>
+                <span
+                  className={
+                    onlineUsers.some((us) => us?.userId === u?._id)
+                      ? "user-online"
+                      : ""
+                  }
+                ></span>
               </div>
             );
           })}

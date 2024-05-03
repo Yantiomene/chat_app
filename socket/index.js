@@ -12,8 +12,12 @@ io.on("connection", (socket) => {
     !onlineUsers.some((user) => user.userId === userId) &&
       onlineUsers.push({ userId, socketId: socket.id });
 
-    console.log("Online users:", onlineUsers);
+    io.emit("getOnlineUsers", onlineUsers);
+  });
 
+  // Listen to a disconnect event
+  socket.on("disconnect", () => {
+    onlineUsers = onlineUsers.filter((u) => u.socketId !== socket.id);
     io.emit("getOnlineUsers", onlineUsers);
   });
 });
