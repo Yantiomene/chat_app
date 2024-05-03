@@ -4,6 +4,7 @@ import { Container, Stack } from "react-bootstrap";
 import UserChat from "../components/chat/UserChat";
 import { AuthContext } from "../context/AuthContext";
 import PotentialChats from "../components/chat/PotentialChats";
+import ChatBox from "../components/chat/ChatBox";
 
 const Chat = () => {
   const {
@@ -11,7 +12,6 @@ const Chat = () => {
     isUserChatsLoading,
     userChatsError,
     updateCurrentChat,
-    getMessages,
     sendMessage,
   } = useContext(ChatContext);
 
@@ -31,7 +31,7 @@ const Chat = () => {
               </div>
             ))}
           </Stack>
-          <p>ChatBox</p>
+          <ChatBox />
         </Stack>
       )}
     </Container>

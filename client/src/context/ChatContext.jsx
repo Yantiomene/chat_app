@@ -18,6 +18,8 @@ export const ChatProvider = ({ children, user }) => {
   const [messages, setMessages] = useState([]);
   const [isMessagesLoading, setIsMessagesLoading] = useState(false);
   const [messagesError, setMessagesError] = useState(null);
+  const [sendMessageError, setSendMessageError] = useState(null);
+  const [newMessage, setNewMessage] = useState(null);
 
   useEffect(() => {
     const getUsers = async () => {
@@ -91,19 +93,30 @@ export const ChatProvider = ({ children, user }) => {
     setCurrentChat(chat);
   }, []);
 
-  const sendMessage = async (message) => {
-    const data = await postRequest(
-      `${baseUrl}/messages`,
-      JSON.stringify({ message })
-    );
+  const sendMessage = useCallback(
+    async (textMessage, sender, currentChatId, setTextMessage) => {
+      if (!textMessage) return console.log("You must type something...");
 
-    if (data.error) {
-      setError(data.message);
-      return;
-    }
+      const response = await postRequest(
+        `${baseUrl}/messages/create`,
+        JSON.stringify({
+          chatId: currentChatId,
+          senderId: sender._id,
+          message: textMessage,
+        })
+      );
 
-    setMessages((prev) => [...prev, data]);
-  };
+      if (response.error) {
+        setSendMessageError(response.message);
+        return;
+      }
+
+      setNewMessage(response.response);
+      setTextMessage("");
+      setMessages((prev) => [...prev, response.response]);
+    },
+    []
+  );
 
   const createChat = useCallback(async (firstId, secondId) => {
     const response = await postRequest(
@@ -127,10 +140,12 @@ export const ChatProvider = ({ children, user }) => {
         potentialChats,
         updateCurrentChat,
         createChat,
+        currentChat,
         messages,
         isMessagesLoading,
         messagesError,
         sendMessage,
+        sendMessageError,
       }}
     >
       {children}

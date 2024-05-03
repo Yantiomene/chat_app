@@ -64,7 +64,7 @@ body {
 }
 
 .messages-box {
-  height: 30vh;
+  height: 85vh;
 }
 
 /* Chat Header */
@@ -88,17 +88,22 @@ body {
   color: white;
   background: #282828;
   padding: 0.75rem;
-  border-radius: 5px;
+  border-radius: 10px;
   max-width: 50%;
 }
 
 .message.self {
-  color: white;
-  background: #00bd9b;
+  color: rgb(47, 49, 50);
+  background: rgb(124, 229, 124);
+}
+
+.message.other {
+  color: rgb(47, 49, 50);
+  background: rgb(206, 230, 240);
 }
 
 .message-footer {
-  font-size: 12px;
+  font-size: 10px;
   align-self: flex-end;
   font-weight: 400;
 }
@@ -111,7 +116,7 @@ body {
 }
 .send-btn {
   border: none;
-  background: rgba(72, 112, 223, 1);
+  background: rgb(249, 63, 63);
   color: white;
   height: 40px;
   width: 40px;
