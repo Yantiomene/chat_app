@@ -10,8 +10,7 @@ const NavBar = () => {
       <Container>
         <Nav.Link href="/">Blood+ Chat</Nav.Link>
         <span className="text-warning">
-          {user ? user.name : "Hello"}, welcome to chat application for blood
-          donation!
+          {user ? user.name : "Hello"}, welcome to blood donation chat app!
         </span>
         <Nav>
           <Stack direction="horizontal" gap={3}>
