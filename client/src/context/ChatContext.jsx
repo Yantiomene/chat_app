@@ -6,6 +6,7 @@ import {
   useState,
 } from "react";
 import { baseUrl, getRequest, postRequest } from "../utils/services";
+import { io } from "socket.io-client";
 
 export const ChatContext = createContext();
 
@@ -20,6 +21,25 @@ export const ChatProvider = ({ children, user }) => {
   const [messagesError, setMessagesError] = useState(null);
   const [sendMessageError, setSendMessageError] = useState(null);
   const [newMessage, setNewMessage] = useState(null);
+  const [socket, setSocket] = useState(null);
+  const [onlineUsers, setOnlineUsers] = useState([]);
+
+  // Connect to the socket server
+  useEffect(() => {
+    const newSocket = io("http://localhost:3001");
+    setSocket(newSocket);
+
+    return () => newSocket.close();
+  }, [user]);
+
+  // Add the user to the online users list
+  useEffect(() => {
+    if (!socket) return;
+    socket.emit("addNewUser", user?._id);
+    socket.on("getOnlineUsers", (res) => {
+      setOnlineUsers(res);
+    });
+  }, [socket]);
 
   useEffect(() => {
     const getUsers = async () => {
@@ -146,6 +166,7 @@ export const ChatProvider = ({ children, user }) => {
         messagesError,
         sendMessage,
         sendMessageError,
+        onlineUsers,
       }}
     >
       {children}
