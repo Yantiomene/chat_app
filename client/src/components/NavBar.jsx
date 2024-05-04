@@ -2,6 +2,7 @@ import { Container, Nav, Navbar, Stack } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import Notification from "./chat/Notification";
 
 const NavBar = () => {
   const { user, logoutUser } = useContext(AuthContext);
@@ -10,7 +11,7 @@ const NavBar = () => {
       <Container>
         <Nav.Link href="/">Blood+ Chat</Nav.Link>
         <span className="text-warning">
-          {user ? user.name : "Hello"}, welcome to blood donation chat app!
+          {user ? user.name : "Hello"}, welcome to the blood donation chat app!
         </span>
         <Nav>
           <Stack direction="horizontal" gap={3}>
@@ -34,6 +35,7 @@ const NavBar = () => {
                 Request
               </Link>
             ) : null}
+            {user ? <Notification /> : null}
             {user ? (
               <Link
                 to="/logout"

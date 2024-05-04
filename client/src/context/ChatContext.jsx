@@ -23,6 +23,10 @@ export const ChatProvider = ({ children, user }) => {
   const [newMessage, setNewMessage] = useState(null);
   const [socket, setSocket] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
+  const [notification, setNotification] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
+
+  console.log("Notification", notification);
 
   // Connect to the socket server
   useEffect(() => {
@@ -52,7 +56,7 @@ export const ChatProvider = ({ children, user }) => {
     socket.emit("sendMessage", { ...newMessage, recipientId });
   }, [newMessage]);
 
-  // receive messages from the server
+  // receive messages and notification from the server
   useEffect(() => {
     if (!socket) return;
     socket.on("getMessage", (message) => {
@@ -60,8 +64,20 @@ export const ChatProvider = ({ children, user }) => {
         setMessages((prev) => [...prev, message]);
       }
     });
+
+    socket.on("getNotification", (notification) => {
+      const isChatOpen = currentChat?.members.some(
+        (id) => id === notification.senderId
+      );
+      isChatOpen &&
+        setNotification((prev) => [...prev, { ...notification, isRead: true }]);
+
+      !isChatOpen && setNotification((prev) => [...prev, notification]);
+    });
+
     return () => {
       socket.off("getMessage");
+      socket.off("getNotification");
     };
   }, [currentChat, socket]);
 
@@ -72,6 +88,8 @@ export const ChatProvider = ({ children, user }) => {
       if (response.error) {
         return console.log("Error fetching users", response.message);
       }
+
+      setAllUsers(response.users);
       const pChats = response.users.filter((u) => {
         let isChat = false;
         if (user?._id === u._id) return false;
@@ -191,6 +209,8 @@ export const ChatProvider = ({ children, user }) => {
         sendMessage,
         sendMessageError,
         onlineUsers,
+        notification,
+        allUsers,
       }}
     >
       {children}

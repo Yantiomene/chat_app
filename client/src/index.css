@@ -189,9 +189,9 @@ body {
 
 .notification-count {
   display: flex;
-  background: #00bd9b;
-  height: 25px;
-  width: 25px;
+  background: rgb(236, 65, 65);
+  height: 18px;
+  width: 18px;
   font-size: 14px;
   font-weight: 700;
   border-radius: 50%;
