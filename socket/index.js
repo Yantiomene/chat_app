@@ -15,6 +15,12 @@ io.on("connection", (socket) => {
     io.emit("getOnlineUsers", onlineUsers);
   });
 
+  // Add message
+  socket.on("sendMessage", (message) => {
+    const recipient = onlineUsers.find((u) => u.userId === message.recipientId);
+    recipient && io.to(recipient.socketId).emit("getMessage", message);
+  });
+
   // Listen to a disconnect event
   socket.on("disconnect", () => {
     onlineUsers = onlineUsers.filter((u) => u.socketId !== socket.id);

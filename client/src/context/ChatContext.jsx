@@ -45,6 +45,26 @@ export const ChatProvider = ({ children, user }) => {
     };
   }, [socket]);
 
+  // send the new message to the server
+  useEffect(() => {
+    if (!socket) return;
+    const recipientId = currentChat?.members.find((id) => id !== user._id);
+    socket.emit("sendMessage", { ...newMessage, recipientId });
+  }, [newMessage]);
+
+  // receive messages from the server
+  useEffect(() => {
+    if (!socket) return;
+    socket.on("getMessage", (message) => {
+      if (currentChat?._id === message.chatId) {
+        setMessages((prev) => [...prev, message]);
+      }
+    });
+    return () => {
+      socket.off("getMessage");
+    };
+  }, [currentChat, socket]);
+
   useEffect(() => {
     const getUsers = async () => {
       const response = await getRequest(`${baseUrl}/users`);
