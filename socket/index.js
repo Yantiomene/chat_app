@@ -18,7 +18,14 @@ io.on("connection", (socket) => {
   // Add message
   socket.on("sendMessage", (message) => {
     const recipient = onlineUsers.find((u) => u.userId === message.recipientId);
-    recipient && io.to(recipient.socketId).emit("getMessage", message);
+    if (recipient) {
+      io.to(recipient.socketId).emit("getMessage", message);
+      io.to(recipient.socketId).emit("getNotification", {
+        senderId: message.senderId,
+        isRead: false,
+        date: new Date(),
+      });
+    }
   });
 
   // Listen to a disconnect event
