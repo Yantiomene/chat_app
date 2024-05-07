@@ -127,7 +127,7 @@ export const ChatProvider = ({ children, user }) => {
     };
 
     getUserChats();
-  }, [user]);
+  }, [user, notification]);
 
   useEffect(() => {
     const getMessages = async () => {
